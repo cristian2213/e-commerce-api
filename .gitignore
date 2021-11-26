@@ -1,0 +1,13 @@
+# code editors
+vscode
+
+# dependencies
+node_modules/
+
+# environment variables
+.env
+.prod.env
+.stag.env
+
+# bundle
+dist/
