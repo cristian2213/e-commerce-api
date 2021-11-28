@@ -6,6 +6,7 @@ export default () => {
     },
     databases: {
       mysql: {
+        dbConnection: process.env.DB_CONNECTION!,
         host: process.env.MYSQL_HOST!,
         name: process.env.MYSQL_DATABASE!,
         port: parseInt(process.env.MYSQL_PORT!),

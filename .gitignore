@@ -11,3 +11,14 @@ node_modules/
 
 # bundle
 dist/
+
+# Files
+*.img
+*.jpg
+*.png
+*.pdf
+*.txt
+*.csv
+
+# Docker
+mysql_data/

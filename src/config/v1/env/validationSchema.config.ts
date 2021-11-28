@@ -9,6 +9,7 @@ export default async (env: Environment) => {
     }),
     databases: Joi.object({
       mysql: Joi.object({
+        dbConnection: Joi.string().required(),
         host: Joi.string().required(),
         name: Joi.string().required(),
         port: Joi.number().required(),

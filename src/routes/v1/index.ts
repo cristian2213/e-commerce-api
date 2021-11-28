@@ -1,16 +1,9 @@
-// ******************** External dependencies **********************
-import express from 'express';
-const router = express.Router();
-// *****************************************************************
-// ******************** Local dependencies *************************
-import authRoutes from './modules/auth.route';
-import productsRoutes from './modules/products.route';
-// *****************************************************************
+import { Router } from 'express';
+import authRoutes from './modules/auth';
+import prodRoutes from './modules/products';
+const router = Router();
 
-// ********************  Authentication routes *********************
 router.use('/auth', authRoutes);
-
-router.use('/products', productsRoutes);
-// *****************************************************************
+router.use('/products', prodRoutes);
 
 export default router;
