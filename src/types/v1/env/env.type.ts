@@ -13,5 +13,7 @@ export type Environment = {
     };
   };
 
-  jwt: {};
+  jwt: {
+    secret: string;
+  };
 };

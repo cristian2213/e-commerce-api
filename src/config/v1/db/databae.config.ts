@@ -15,12 +15,13 @@ const dbConnection = new Sequelize(name, user, password, {
   port,
   define: {
     charset: 'utf8',
-    deletedAt: true,
+    underscored: true,
     timestamps: true,
+    deletedAt: true,
   },
 
   // to force sync for models, Just for development
-  sync: { force: true },
+  sync: { force: true, alter: true },
 
   pool: {
     max: 60,

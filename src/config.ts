@@ -14,6 +14,8 @@ export default () => {
         password: process.env.MYSQL_ROOT_PASSWORD!,
       },
     },
-    jwt: {},
+    jwt: {
+      secret: process.env.JWT_SECRET!,
+    },
   };
 };

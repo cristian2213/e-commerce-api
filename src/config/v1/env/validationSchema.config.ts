@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { Environment } from '../../../types/env/env.type';
+import { Environment } from '../../../types/v1/env/env.type';
 
 export default async (env: Environment) => {
   const envSchema = Joi.object({
@@ -17,7 +17,9 @@ export default async (env: Environment) => {
         password: Joi.string().required(),
       }),
     }),
-    jwt: Joi.object({}),
+    jwt: Joi.object({
+      secret: Joi.string().required(),
+    }),
   });
 
   await envSchema.validateAsync(env);

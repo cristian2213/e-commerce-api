@@ -4,13 +4,15 @@ import { join } from 'path';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { options, setUpOptions } from './config/v1/swagger/swagger.config';
+import { Sequelize } from 'sequelize';
 
 import config from './config';
 import dbConnection from './config/v1/db/databae.config';
 import envConfig from './config/v1/env/env.config';
 import validationSchema from './config/v1/env/validationSchema.config';
 import routerV1 from './routes/v1/index';
-import { Environment } from './types/env/env.type';
+import { Environment } from './types/v1/env/env.type';
+import User from './models/v1/user/user';
 
 const app = express() as Application;
 
@@ -23,15 +25,17 @@ const bootstrap = async (): Promise<void> => {
     const env = config() as Environment;
     await validationSchema(env);
 
+    // FIXME provisional
+    // await User.sync({ force: true, alter: true });
+
     await dbConnection.sync();
 
+    app.use(express.json());
     app.use(
       cors({
         origin: '*',
       })
     );
-
-    app.use(express.json());
 
     app.use(
       '/storate-images',
