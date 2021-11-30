@@ -4,31 +4,28 @@ import { StatusCodes } from 'http-status-codes';
 import envConfig from '../../../config/v1/env/env.config';
 import config from '../../../config';
 import { PayloadToken } from '../../../types/v1/jwt/jwt';
-import UserService from '../user/user';
+import UsersService from '../users/users';
 import { Roles } from '../../../helpers/v1/roles/roles';
+import { errorsHandler } from '../../../helpers/v1/handlers/errorsHandler';
 
 envConfig();
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, email, password, role } = req.body;
-    let user: any = {
-      name,
-      email,
-      password,
-      role,
-    };
+    const { role } = req.body;
+    req.body.signUp = true;
+    let user: any;
     switch (role) {
       case Roles.ADMIN:
-        user = await UserService.createUser(user);
+        user = await UsersService.createUser(req, res);
         break;
 
       case Roles.CUSTOMER:
-        user = await UserService.createUser(user);
+        user = await UsersService.createUser(req, res);
         break;
 
       case Roles.DEALER:
-        user = await UserService.createUser(user);
+        user = await UsersService.createUser(req, res);
         break;
     }
 
@@ -40,7 +37,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
     });
     return res.status(StatusCodes.CREATED).json({ user, token });
   } catch (error) {
-    console.log(error);
+    errorsHandler(req, res, error);
   }
 };
 

@@ -26,7 +26,7 @@ const bootstrap = async (): Promise<void> => {
     await validationSchema(env);
 
     // FIXME provisional
-    // await User.sync({ force: true, alter: true });
+    await User.sync({ force: true, alter: true });
 
     await dbConnection.sync();
 

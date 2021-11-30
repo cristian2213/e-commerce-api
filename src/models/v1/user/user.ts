@@ -7,12 +7,14 @@ import argon2 from 'argon2';
 export interface UserAttr {
   id: number;
   name: string;
-  email: string;
+  email: string | null;
   password: string;
   role: string;
   emailVerifiedAt: Date;
   token: string;
   tokenExpiration: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // Some fields are optional when calling UserModel.create() or UserModel.build()
@@ -46,7 +48,7 @@ const User = dbConnection.define<UserInstance>(
     email: {
       type: DataTypes.STRING,
       unique: true,
-      allowNull: false,
+      allowNull: true,
       validate: {
         isEmail: {
           msg: 'Please, add a valid email',
@@ -55,7 +57,6 @@ const User = dbConnection.define<UserInstance>(
           args: [60],
           msg: 'Only allow 60 characters',
         },
-        notNull: true,
         notEmpty: true,
       },
     },
@@ -103,7 +104,13 @@ const User = dbConnection.define<UserInstance>(
         const hash = await argon2.hash(user.password);
         user.password = hash;
       },
+      async beforeUpdate(user: UserInstance) {
+        if (user.password) {
+          user.password = await argon2.hash(user.password);
+        }
+      },
     },
+    paranoid: true,
   }
 );
 
