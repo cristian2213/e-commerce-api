@@ -1,7 +1,7 @@
 import { Roles } from './../../../helpers/v1/roles/roles';
 import { Request, Response, NextFunction } from 'express';
 import { body } from 'express-validator';
-import UserService from '../../../services/v1/user/user';
+import UserService from '../../../services/v1/users/users';
 import validationHandler from '../../../helpers/v1/handlers/validationHandler';
 
 export const signUpReq = [
