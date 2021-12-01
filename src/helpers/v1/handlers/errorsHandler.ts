@@ -10,6 +10,6 @@ export const errorsHandler = (
   const errorCode: number = StatusCodes.INTERNAL_SERVER_ERROR;
   return res.status(errorCode).json({
     statusCode: errorCode,
-    status: ReasonPhrases.INTERNAL_SERVER_ERROR,
+    message: ReasonPhrases.INTERNAL_SERVER_ERROR,
   });
 };
