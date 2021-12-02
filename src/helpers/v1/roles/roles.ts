@@ -4,6 +4,6 @@ export enum Roles {
   DEALER = 'dealer',
 }
 
-export const RolesKeys = Object.keys(Roles);
+export const RolesKeys: string[] = Object.keys(Roles);
 
-export const RolesValues = Object.values(Roles);
+export const RolesValues: string[] = Object.values(Roles);
