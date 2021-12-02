@@ -2,14 +2,15 @@ import { Response, Request } from 'express';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 
 export const errorsHandler = (
-  req: Request,
+  _req: Request,
   res: Response,
-  error: any
+  error: any,
+  msg?: string
 ): object => {
   console.log(error);
   const errorCode: number = StatusCodes.INTERNAL_SERVER_ERROR;
   return res.status(errorCode).json({
     statusCode: errorCode,
-    message: ReasonPhrases.INTERNAL_SERVER_ERROR,
+    message: msg ? msg : ReasonPhrases.INTERNAL_SERVER_ERROR,
   });
 };

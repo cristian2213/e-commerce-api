@@ -1,17 +1,11 @@
 import { Router } from 'express';
-import { signUpReq } from '../../../requests/v1/auth/authRequests';
+import { signUpReq, loginReq } from '../../../requests/v1/auth/authRequests';
 import AuthService from '../../../services/v1/auth/auth';
 const router = Router();
 
 router.post('/signup', signUpReq, AuthService.signUp);
 
-// router.get('/login', (req, res, next) => {
-//   res.send('login');
-// });
-
-// router.get('/logout', (req, res, next) => {
-//   res.send('logout');
-// });
+router.post('/login', loginReq, AuthService.login);
 
 export default router;
 

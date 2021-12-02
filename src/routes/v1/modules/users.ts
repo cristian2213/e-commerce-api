@@ -9,9 +9,9 @@ import {
 import UsersService from '../../../services/v1/users/users';
 const router = Router();
 
-router.get('/create', createUserReq, UsersService.createUser);
 router.get('/get-users', UsersService.getUsers);
 router.get('/get-user/:id', getUserReq, UsersService.getUser);
+router.post('/create', createUserReq, UsersService.createUser);
 router.put(
   '/update-user/:id',
   verifyToken,
