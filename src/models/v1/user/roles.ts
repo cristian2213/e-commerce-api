@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import dbConnection from '../../../config/v1/db/databae.config';
 import { Roles } from '../../../helpers/v1/roles/roles';
 
+// FIXME add N:N for dinamic roles
 const Role = dbConnection.define(
   'Role',
   {

@@ -3,3 +3,7 @@ export enum Roles {
   ADMIN = 'admin',
   DEALER = 'dealer',
 }
+
+export const RolesKeys = Object.keys(Roles);
+
+export const RolesValues = Object.values(Roles);
