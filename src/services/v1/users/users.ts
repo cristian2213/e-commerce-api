@@ -98,6 +98,16 @@ const deleteUser = async (req: Request, res: Response): Promise<any> => {
 
 const findByEmail = async (email: string): Promise<UserInstance | null> => {
   const user = await User.findOne({
+    attributes: [
+      'id',
+      'name',
+      'email',
+      'role',
+      'password',
+      'emailVerifiedAt',
+      'createdAt',
+      'updatedAt',
+    ],
     where: {
       email,
     },

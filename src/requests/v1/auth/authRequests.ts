@@ -79,3 +79,24 @@ export const signUpReq = [
     validationHandler(req, res, next);
   },
 ];
+
+export const loginReq = [
+  body('email')
+    .exists()
+    .withMessage('The email field is required')
+    .bail()
+    .isEmail()
+    .withMessage('The email field is invalid')
+    .trim()
+    .escape(),
+
+  body('password')
+    .exists()
+    .withMessage('The password field is required')
+    .bail()
+    .trim()
+    .escape(),
+  (req: Request, res: Response, next: NextFunction) => {
+    validationHandler(req, res, next);
+  },
+];
