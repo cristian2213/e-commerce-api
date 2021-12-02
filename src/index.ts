@@ -4,7 +4,7 @@ import { join } from 'path';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { options, setUpOptions } from './config/v1/swagger/swagger.config';
-import { Sequelize } from 'sequelize';
+
 
 import config from './config';
 import dbConnection from './config/v1/db/databae.config';
@@ -13,6 +13,7 @@ import validationSchema from './config/v1/env/validationSchema.config';
 import routerV1 from './routes/v1/index';
 import { Environment } from './types/v1/env/env.type';
 import User from './models/v1/user/user';
+import Role from './models/v1/user/roles';
 
 const app = express() as Application;
 
@@ -27,6 +28,7 @@ const bootstrap = async (): Promise<void> => {
 
     // FIXME provisional
     await User.sync({ force: true, alter: true });
+    await Role.sync({ force: true, alter: true });
 
     await dbConnection.sync();
 
