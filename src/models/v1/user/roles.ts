@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import dbConnection from '../../../config/v1/db/databae.config';
 import { Roles } from '../../../helpers/v1/roles/roles';
+import User from './user';
 
 // FIXME add N:N for dinamic roles
 const Role = dbConnection.define(
@@ -22,5 +23,7 @@ const Role = dbConnection.define(
     paranoid: true,
   }
 );
+// 1:n
+// Role.belongsTo(User);
 
 export default Role;

@@ -1,6 +1,6 @@
 export interface PayloadToken {
   sub: number;
-  role: string;
+  roles: string[];
   name: string;
   email: string;
 }

@@ -59,10 +59,17 @@ export const signUpReq = [
       if (confirmPassword.trim() !== req.body.password.trim())
         throw new Error('Password do not match');
       return true;
-    }),
-  body('role')
+    })
+    .bail()
+    .trim()
+    .escape(),
+
+  body('roles')
     .exists()
     .withMessage('The role field is required')
+    .bail()
+    .isArray()
+    .withMessage('The role field must be an array')
     .bail()
     .isIn(Object.values(Roles))
     .withMessage(`Only allowed ${Object.values(Roles).join(', ')}`)

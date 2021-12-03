@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, urlencoded } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import JWT from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import envConfig from '../../../config/v1/env/env.config';
@@ -12,27 +12,28 @@ import { verify } from 'argon2';
 envConfig();
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
+  console.log('passed!');
   try {
-    const { role } = req.body;
+    const { roles } = req.body;
     req.body.signUp = true;
-    let user: any;
-    switch (role) {
-      case Roles.ADMIN:
-        user = await UsersService.createUser(req, res);
-        break;
+    const user: any = await UsersService.createUser(req, res);
+    // switch (roles) {
+    //   case Roles.ADMIN:
+    //     user = await UsersService.createUser(req, res);
+    //     break;
 
-      case Roles.CUSTOMER:
-        user = await UsersService.createUser(req, res);
-        break;
+    //   case Roles.CUSTOMER:
+    //     user = await UsersService.createUser(req, res);
+    //     break;
 
-      case Roles.DEALER:
-        user = await UsersService.createUser(req, res);
-        break;
-    }
+    //   case Roles.DEALER:
+    //     user = await UsersService.createUser(req, res);
+    //     break;
+    // }
 
     const token = generateJWT({
       sub: user.id,
-      role: user.role,
+      roles: user.roles,
       name: user.name,
       email: user.email,
     });
@@ -67,7 +68,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const payload: PayloadToken = {
       sub: user.id,
-      role: user.role,
+      roles: user.roles,
       email: user.email,
       name: user.name,
     };
@@ -89,7 +90,10 @@ const generateJWT = (payload: PayloadToken, ttl = '1h'): string => {
   return token;
 };
 
-const comparePasswords = async (hash: string, password: string): Promise<boolean | never> => {
+const comparePasswords = async (
+  hash: string,
+  password: string
+): Promise<boolean | never> => {
   try {
     if (!hash || !password)
       throw new Error('The hash and password parameters are required');

@@ -20,9 +20,6 @@ const dbConnection = new Sequelize(name, user, password, {
     deletedAt: true,
   },
 
-  // to force sync for models, Just for development
-  sync: { force: true, alter: true },
-
   pool: {
     max: 60,
     min: 0,

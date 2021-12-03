@@ -11,6 +11,8 @@ import envConfig from './config/v1/env/env.config';
 import validationSchema from './config/v1/env/validationSchema.config';
 import routerV1 from './routes/v1/index';
 import { Environment } from './types/v1/env/env.type';
+import User from './models/v1/user/user';
+import Role from './models/v1/user/roles';
 
 const app = express() as Application;
 
@@ -23,7 +25,7 @@ const bootstrap = async (): Promise<void> => {
     const env = config() as Environment;
     await validationSchema(env);
 
-    await dbConnection.sync();
+    await dbConnection.sync({ force: true, alter: true });
 
     app.use(express.json());
     app.use(
