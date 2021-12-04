@@ -73,3 +73,82 @@ export const deleteUserReq = [
     validationHandler(req, res, next);
   },
 ];
+
+export const resetPasswordReq = [
+  body('email')
+    .exists()
+    .withMessage('The email field is required')
+    .bail()
+    .isEmail()
+    .withMessage('The email field is invalid')
+    .bail()
+    .trim()
+    .escape(),
+  (req: Request, res: Response, next: NextFunction) => {
+    validationHandler(req, res, next);
+  },
+];
+
+export const confirmToken = [
+  param('token')
+    .exists()
+    .withMessage('The token field is required')
+    .bail()
+    .isString()
+    .withMessage('The token field must be a string')
+    .bail()
+    .isLength({ min: 44, max: 44 })
+    .withMessage('The token length is invalid')
+    .trim(),
+  (req: Request, res: Response, next: NextFunction) => {
+    validationHandler(req, res, next);
+  },
+];
+
+export const updatePassword = [
+  param('token')
+    .exists()
+    .withMessage('The token field is required')
+    .bail()
+    .isString()
+    .withMessage('The token field must be a string')
+    .bail()
+    .isLength({ min: 44, max: 44 })
+    .withMessage('The token length is invalid')
+    .trim(),
+
+  body('password')
+    .exists()
+    .withMessage('The password field is required')
+    .bail()
+    /* 
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
+  */
+    .isStrongPassword()
+    .withMessage(
+      'The password field must have a minimum of 8 characters, a minimum of 1 lowercase, a minimum of 1 uppercase, 1 number and 1 symbol'
+    )
+    .bail()
+    .trim()
+    .escape(),
+
+  body('confirmPassword')
+    .exists()
+    .withMessage('The confirmPassword field is required')
+    .bail()
+    .custom((confirmPassword, { req }) => {
+      if (confirmPassword.trim() !== req.body.password.trim())
+        throw new Error('Password do not match');
+      return true;
+    })
+    .bail()
+    .trim()
+    .escape(),
+  (req: Request, res: Response, next: NextFunction) => {
+    validationHandler(req, res, next);
+  },
+];

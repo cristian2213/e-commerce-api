@@ -5,8 +5,12 @@ import {
   getUserReq,
   updateUserReq,
   deleteUserReq,
+  resetPasswordReq,
+  confirmToken,
+  updatePassword,
 } from '../../../requests/v1/users/users';
 import UsersService from '../../../services/v1/users/users';
+
 const router = Router();
 
 router.get('/get-users', UsersService.getUsers);
@@ -23,6 +27,16 @@ router.delete(
   verifyToken,
   deleteUserReq,
   UsersService.deleteUser
+);
+
+router.post('/reset-password', resetPasswordReq, UsersService.resetPassword);
+
+router.get('/reset-password/:token', confirmToken, UsersService.confirmToken);
+
+router.post(
+  '/reset-password/:token',
+  updatePassword,
+  UsersService.updatePassword
 );
 
 export default router;

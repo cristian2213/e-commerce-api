@@ -1,10 +1,37 @@
-import { options } from './../../../config/v1/swagger/swagger.config';
 import { DataTypes, Model, Optional } from 'sequelize';
 import dbConnection from '../../../config/v1/db/databae.config';
 import argon2 from 'argon2';
 import Role from './roles';
-// We recommend you declare an interface for the attributes, for stricter typechecking
-const User = dbConnection.define(
+
+// UserAttributes defines all the possible attributes of our model
+interface UserAttributes {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  emailVerifiedAt: Date;
+  token: string | null;
+  tokenExpiration: Date | null;
+}
+
+// UserInput defines the type of the object passed to Sequelize’s model.create
+export interface UserCreation
+  extends Optional<
+    UserAttributes,
+    'id' | 'emailVerifiedAt' | 'token' | 'tokenExpiration'
+  > {}
+
+// IngredientOuput defines the returned object from model.create, model.update, and model.findOne
+export interface UserInstance
+  extends Model<UserAttributes, UserCreation>,
+    UserAttributes {
+  roles?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+}
+
+const User = dbConnection.define<UserInstance>(
   'User',
   {
     id: {
@@ -62,11 +89,13 @@ const User = dbConnection.define(
     },
     token: {
       type: DataTypes.STRING,
+      allowNull: true,
       defaultValue: null,
       comment: 'Field to add verification token',
     },
     tokenExpiration: {
       type: DataTypes.DATE,
+      allowNull: true,
       defaultValue: null,
       comment: 'Field to set the limit time for token',
     },
@@ -78,6 +107,8 @@ const User = dbConnection.define(
         user.password = hash;
       },
     },
+    timestamps: true,
+    deletedAt: true,
     paranoid: true,
   }
 );

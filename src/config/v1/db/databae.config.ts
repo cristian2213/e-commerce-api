@@ -16,8 +16,6 @@ const dbConnection = new Sequelize(name, user, password, {
   define: {
     charset: 'utf8',
     underscored: true,
-    timestamps: true,
-    deletedAt: true,
   },
 
   pool: {

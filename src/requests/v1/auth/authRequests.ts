@@ -53,7 +53,7 @@ export const signUpReq = [
 
   body('confirmPassword')
     .exists()
-    .withMessage('The confirm password firld is required')
+    .withMessage('The confirmPassword field is required')
     .bail()
     .custom((confirmPassword, { req }) => {
       if (confirmPassword.trim() !== req.body.password.trim())

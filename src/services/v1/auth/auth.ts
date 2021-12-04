@@ -3,7 +3,7 @@ import JWT from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import envConfig from '../../../config/v1/env/env.config';
 import config from '../../../config';
-import { PayloadToken } from '../../../types/v1/jwt/jwt';
+import { PayloadToken } from '../../../types/v1/jwt/jwt.type';
 import UsersService from '../users/users';
 import { Roles } from '../../../helpers/v1/roles/roles';
 import { errorsHandler } from '../../../helpers/v1/handlers/errorsHandler';

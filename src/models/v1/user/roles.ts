@@ -20,6 +20,8 @@ const Role = dbConnection.define(
     },
   },
   {
+    timestamps: true,
+    deletedAt: true,
     paranoid: true,
   }
 );
