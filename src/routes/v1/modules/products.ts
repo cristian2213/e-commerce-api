@@ -1,6 +1,15 @@
 import express from 'express';
 const router = express.Router();
 
+router.get('/get-products'); // paginated!
+router.get('/get-product/:id');
+router.post('/create');
+router.put('/update-product/:id'); // it wouldn't update order field
+router.delete('/delete-product/:id');
+
+router.post('/bulk-upload');
+router.put('/update-order/:id'); // apply data structure
+
 // /**
 //  * @openapi
 //  * /api-module2/{userId}:
