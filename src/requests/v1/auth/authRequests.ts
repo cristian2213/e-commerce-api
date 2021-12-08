@@ -74,14 +74,23 @@ export const signUpReq = [
     .isIn(Object.values(Roles))
     .withMessage(`Only allowed ${Object.values(Roles).join(', ')}`)
     .bail(),
-  // .custom((role: string) => {
-  //   const allowedRoles: string[] = Object.values(Roles);
-  //   if (!allowedRoles.includes(role))
-  //     throw new Error(
-  //       'Invalid role, Only allowed' + ' ' + allowedRoles.join(', ')
-  //     );
-  //   return true;
-  // }),
+
+  body('accountConfirmationPath')
+    .exists()
+    .withMessage('The accountConfirmationPath field is required')
+    .bail()
+    .isURL()
+    .withMessage('The accountConfirmationPath field must be an URL')
+    .bail()
+    .custom((value: string, { req }) => {
+      if (value.endsWith('/')) {
+        req.body.accountConfirmationPath = value.substring(0, value.length - 1);
+      }
+      return true;
+    })
+    .trim()
+    .bail(),
+
   (req: Request, res: Response, next: NextFunction) => {
     validationHandler(req, res, next);
   },

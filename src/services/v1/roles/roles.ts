@@ -79,13 +79,16 @@ const createRoles = async (req: any, res: Response) => {
   try {
     const { roles } = req.body;
     const userRoles: string[] = [];
+
     for (let i = 0; i < roles.length; i++) {
       const role: any = await Role.create({
         name: roles[i].id || roles[i],
         userId: req.body.id || req.user.sub,
       });
+
       userRoles.push(role.name);
     }
+
     return userRoles;
   } catch (error) {
     errorsHandler(req, res, error);

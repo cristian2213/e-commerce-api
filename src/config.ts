@@ -17,5 +17,9 @@ export default () => {
     jwt: {
       secret: process.env.JWT_SECRET!,
     },
+    sendGrid: {
+      SENDGRID_API_KEY: process.env.SENDGRID_API_KEY!,
+      SENDGRID_EMAIL_FROM: process.env.SENDGRID_EMAIL_FROM!,
+    },
   };
 };

@@ -1,45 +1,41 @@
 import { Request, Response, NextFunction } from 'express';
 import JWT from 'jsonwebtoken';
-import { StatusCodes } from 'http-status-codes';
+import { verify } from 'argon2';
+import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import envConfig from '../../../config/v1/env/env.config';
 import config from '../../../config';
 import { PayloadToken } from '../../../types/v1/jwt/jwt.type';
 import UsersService from '../users/users';
-import { Roles } from '../../../helpers/v1/roles/roles';
 import { errorsHandler } from '../../../helpers/v1/handlers/errorsHandler';
-import { verify } from 'argon2';
+import ShippingHandler from '../emails/sendEmails';
 
 envConfig();
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('passed!');
   try {
-    const { roles } = req.body;
+    const { accountConfirmationPath } = req.body;
     req.body.signUp = true;
     const user: any = await UsersService.createUser(req, res);
-    // switch (roles) {
-    //   case Roles.ADMIN:
-    //     user = await UsersService.createUser(req, res);
-    //     break;
 
-    //   case Roles.CUSTOMER:
-    //     user = await UsersService.createUser(req, res);
-    //     break;
+    const confirmationURL = `${accountConfirmationPath}/${user.token}`;
 
-    //   case Roles.DEALER:
-    //     user = await UsersService.createUser(req, res);
-    //     break;
-    // }
-
-    const token = generateJWT({
-      sub: user.id,
-      roles: user.roles,
-      name: user.name,
-      email: user.email,
+    await ShippingHandler.sendEmail({
+      to: user.email,
+      subject: 'Confirm Account 🔐',
+      file: 'confirmAccount.pug',
+      htmlOptions: {
+        confirmationURL,
+        info: 'test n.1',
+      },
     });
-    return res.status(StatusCodes.CREATED).json({ user, token });
-  } catch (error) {
-    errorsHandler(req, res, error);
+
+    return res.status(StatusCodes.CREATED).json({
+      statusCode: StatusCodes.CREATED,
+      message: "We've seen an confirmation email to your account",
+      confirmationURL,
+    });
+  } catch (error: any) {
+    errorsHandler(req, res, error, error.message);
   }
 };
 
@@ -75,11 +71,44 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const token = generateJWT(payload);
     return res.status(StatusCodes.OK).json({
-      user,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        emailVerifiedAt: user.emailVerifiedAt,
+      },
       token,
     });
   } catch (error: any) {
     errorsHandler(req, res, error, error.message);
+  }
+};
+
+const confirmAccount = async (req: Request, res: Response) => {
+  try {
+    const user: any = await UsersService.certifyToken(req, res);
+
+    if (user === false) {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        statusCode: StatusCodes.FORBIDDEN,
+        message: 'Expired token, please generate a new token',
+        hasValidToken: false,
+        verifiedAccount: false,
+      });
+    }
+    user.token = null;
+    user.tokenExpiration = null;
+    user.emailVerifiedAt = Date.now();
+    await user.save();
+
+    return res.status(StatusCodes.OK).json({
+      statusCode: StatusCodes.OK,
+      message: ReasonPhrases.OK,
+      hasValidToken: true,
+      verifiedAccount: true,
+    });
+  } catch (error) {
+    errorsHandler(req, res, error);
   }
 };
 
@@ -107,4 +136,4 @@ const comparePasswords = async (
   }
 };
 
-export default { signUp, login, generateJWT, comparePasswords };
+export default { signUp, login, generateJWT, comparePasswords, confirmAccount };

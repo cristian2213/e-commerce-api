@@ -1,11 +1,14 @@
 import { Router } from 'express';
 import { signUpReq, loginReq } from '../../../requests/v1/auth/authRequests';
+import { confirmToken } from '../../../requests/v1/users/users';
 import AuthService from '../../../services/v1/auth/auth';
 const router = Router();
 
 router.post('/signup', signUpReq, AuthService.signUp);
 
 router.post('/login', loginReq, AuthService.login);
+
+router.get('/confirm-email/:token', confirmToken, AuthService.confirmAccount);
 
 export default router;
 

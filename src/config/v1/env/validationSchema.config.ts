@@ -20,6 +20,11 @@ export default async (env: Environment) => {
     jwt: Joi.object({
       secret: Joi.string().required(),
     }),
+
+    sendGrid: Joi.object({
+      SENDGRID_API_KEY: Joi.string().required(),
+      SENDGRID_EMAIL_FROM: Joi.string().required(),
+    }),
   });
 
   await envSchema.validateAsync(env);

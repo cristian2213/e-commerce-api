@@ -16,10 +16,14 @@ const createUser = async (req: Request, res: Response) => {
   try {
     const payload: UserCreation = req.body;
     const { name, email, password } = payload;
+    const { token, expirationDate: tokenExpiration } = generateRandomToken();
+
     const user: UserInstance = await User.create({
       name,
       email,
       password,
+      token,
+      tokenExpiration,
     });
 
     req.body.id = user.id;
@@ -30,16 +34,11 @@ const createUser = async (req: Request, res: Response) => {
       name: user.name,
       email: user.email,
       roles: userRoles,
+      token,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
 
-    /* 
-      NOTE SEND EMAIL:
-      1. Setup sendgrid
-      2. Create sending method
-      3. Create template
-  */
     if (req.body.signUp) return responseUser;
 
     return res.status(StatusCodes.CREATED).json(responseUser);
@@ -202,7 +201,7 @@ const resetPassword = async (req: Request, res: Response) => {
     user.token = data.token;
     user.tokenExpiration = data.expirationDate;
     await user.save();
-    const resetLink = `http://${req.headers.host}/reset-password/${data.token}`; // FIXME in production mode to https (front route)
+    const resetLink = `http://${req.headers.host}${req.baseUrl}/reset-password/${data.token}`; // FIXME in production mode to https (front route)
 
     /* 
       NOTE SEND EMAIL:
@@ -317,4 +316,5 @@ export default {
   resetPassword,
   confirmToken,
   updatePassword,
+  certifyToken,
 };
