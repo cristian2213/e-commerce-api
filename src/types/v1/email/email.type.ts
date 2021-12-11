@@ -1,6 +1,8 @@
 export interface HTMLOptions {
+  userName: string;
   confirmationURL: string;
-  info: string;
+  info: string | boolean;
+  year: number;
 }
 
 export interface SendEmailOptions {

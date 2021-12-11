@@ -24,14 +24,16 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
       subject: 'Confirm Account 🔐',
       file: 'confirmAccount.pug',
       htmlOptions: {
+        userName: user.name,
         confirmationURL,
-        info: 'test n.1',
+        info: false,
+        year: new Date().getFullYear(),
       },
     });
 
     return res.status(StatusCodes.CREATED).json({
       statusCode: StatusCodes.CREATED,
-      message: "We've seen an confirmation email to your account",
+      message: "We've seen a confirmation email to your account",
       confirmationURL,
     });
   } catch (error: any) {
