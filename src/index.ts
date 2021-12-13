@@ -25,7 +25,7 @@ const bootstrap = async (): Promise<void> => {
     const env = config() as Environment;
     await validationSchema(env);
 
-    await dbConnection.sync({ force: true, alter: true });
+    // await dbConnection.sync({ force: true, alter: true });
 
     app.use(express.json());
     app.use(
@@ -36,15 +36,15 @@ const bootstrap = async (): Promise<void> => {
 
     app.use(
       '/storate-images',
-      express.static(join(__dirname, '..', 'storage', 'v1', 'images'))
+      express.static(join(__dirname, 'storage', 'v1', 'images'))
     );
     app.use(
       '/storate-docs',
-      express.static(join(__dirname, '..', 'storage', 'v1', 'docs'))
+      express.static(join(__dirname, 'storage', 'v1', 'docs'))
     );
     app.use(
       '/storate-logs',
-      express.static(join(__dirname, '..', 'storage', 'v1', 'logs'))
+      express.static(join(__dirname, 'storage', 'v1', 'logs'))
     );
 
     app.use('/api/v1', routerV1);

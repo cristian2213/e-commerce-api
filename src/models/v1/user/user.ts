@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import dbConnection from '../../../config/v1/db/databae.config';
 import argon2 from 'argon2';
 import Role from './roles';
+import Product from './product';
 
 // UserAttributes defines all the possible attributes of our model
 interface UserAttributes {
@@ -116,5 +117,12 @@ const User = dbConnection.define<UserInstance>(
 // 1:n
 User.hasMany(Role, { sourceKey: 'id', foreignKey: 'userId', as: 'roles' });
 Role.belongsTo(User, { foreignKey: 'userId' });
+
+User.hasMany(Product, {
+  sourceKey: 'id',
+  foreignKey: 'userId',
+  as: 'products',
+});
+Product.belongsTo(User, { foreignKey: 'userId' });
 
 export default User;

@@ -22,3 +22,6 @@ dist/
 
 # Docker
 mysql_data/
+
+# Otros
+notes.txt

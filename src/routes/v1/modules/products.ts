@@ -1,15 +1,15 @@
 import express from 'express';
+import ProductsService from '../../../services/v1/products/products';
 const router = express.Router();
 
-router.get('/get-products'); // paginated!
-router.get('/get-product/:id');
-router.post('/create');
-router.put('/update-product/:id'); // it wouldn't update order field
-router.delete('/delete-product/:id');
+router.get('/get-products', ProductsService.getProducts); // paginated!
+router.get('/get-product/:slug', ProductsService.getProduct);
+router.post('/create-product', ProductsService.createProduct);
+router.put('/update-product/:slug', ProductsService.updateProduct); // it wouldn't update order field
+router.delete('/delete-product/:slug', ProductsService.deleteProduct);
 
-//
 router.post('/bulk-upload');
-router.put('/update-order/:id'); // apply data structure
+router.put('/update-position/:id', ProductsService.updateProductPosition); // apply data structure
 
 // /**
 //  * @openapi
