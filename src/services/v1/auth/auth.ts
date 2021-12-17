@@ -61,7 +61,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     if (!match)
       return res.status(StatusCodes.BAD_REQUEST).json({
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Passwords do not match',
+        message: 'Passwords does not match',
       });
 
     const payload: PayloadToken = {
