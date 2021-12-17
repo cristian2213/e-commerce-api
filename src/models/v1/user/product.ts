@@ -85,10 +85,10 @@ const Product = dbConnection.define(
 
     likes: {
       type: DataTypes.SMALLINT,
-      allowNull: false,
+      allowNull: true,
       defaultValue: 0,
       validate: {
-        notNull: true,
+        notNull: false,
         isInt: true,
       },
     },

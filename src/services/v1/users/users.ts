@@ -306,6 +306,19 @@ const findByEmail = async (email: string) => {
   return user;
 };
 
+const checkUser = async (userId: number) => {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) throw new Error(`The user with the ID ${userId} doesn't exist`);
+    return true;
+  } catch (error: any) {
+    const regex = /exist/gi;
+    if (!regex.test(error.message))
+      throw new Error(`Validation error, please try again`);
+    throw error;
+  }
+};
+
 export default {
   createUser,
   getUsers,
@@ -317,4 +330,5 @@ export default {
   confirmToken,
   updatePassword,
   certifyToken,
+  checkUser,
 };

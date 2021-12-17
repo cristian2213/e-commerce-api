@@ -57,9 +57,11 @@ const getProducts = async (req: Request, res: Response) => {
 const getProduct = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
+    const { userId } = req.body;
     const product = await Product.findOne({
       where: {
         slug,
+        userId,
       },
     });
     if (!product)
@@ -76,13 +78,14 @@ const getProduct = async (req: Request, res: Response) => {
 const updateProduct = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
-    const { userId } = req.body;
+    const { userId, likes } = req.body;
     const product: any = await Product.findOne({ where: { slug, userId } });
     if (!product)
       return res.status(StatusCodes.NOT_FOUND).json({
         statusCode: StatusCodes.NOT_FOUND,
         message: ReasonPhrases.NOT_FOUND,
       });
+    if (likes) req.body.likes += product.likes;
 
     const updatedProduct = await product.update(req.body);
     return res.status(StatusCodes.OK).json(updatedProduct);
@@ -231,15 +234,15 @@ const updateLeftPosition = async (
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
-    const product = await Product.findOne({ where: { slug } });
+    let product: any = await Product.findOne({ where: { slug } });
     if (!product)
       return res.status(StatusCodes.NOT_FOUND).json({
         statusCode: StatusCodes.NOT_FOUND,
         message: ReasonPhrases.NOT_FOUND,
       });
 
-    await product.destroy();
-    return res.status(StatusCodes.OK).json();
+    product = await product.destroy();
+    return res.status(StatusCodes.OK).json(product);
   } catch (error) {
     errorsHandler(req, res, error);
   }

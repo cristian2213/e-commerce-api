@@ -1,14 +1,40 @@
-import express from 'express';
+import multer from 'multer';
+import { join } from 'path';
+import { Router } from 'express';
+import {
+  createProductReq,
+  updateProductReq,
+  getProductReq,
+} from '../../../requests/v1/products/products';
 import ProductsService from '../../../services/v1/products/products';
-const router = express.Router();
+import ProductsBulkUploadService from '../../../services/v1/products/productsBulkUpload';
+import CSVUploadService from '../../../services/v1/filesUploadInterceptors/uploadCsvFile';
+const router = Router();
 
-router.get('/get-products', ProductsService.getProducts); // paginated!
-router.get('/get-product/:slug', ProductsService.getProduct);
-router.post('/create-product', ProductsService.createProduct);
-router.put('/update-product/:slug', ProductsService.updateProduct); // it wouldn't update order field
-router.delete('/delete-product/:slug', ProductsService.deleteProduct);
+router.get('/get-products', ProductsService.getProducts);
+router.get('/get-product/:slug', getProductReq, ProductsService.getProduct);
+router.post('/create-product', createProductReq, ProductsService.createProduct);
+router.put(
+  '/update-product/:slug',
+  getProductReq,
+  updateProductReq,
+  ProductsService.updateProduct
+);
+router.delete(
+  '/delete-product/:slug',
+  getProductReq,
+  ProductsService.deleteProduct
+);
 
-router.post('/bulk-upload');
+router.post(
+  '/bulk-upload',
+  multer(
+    CSVUploadService.multerOptions(
+      join(__dirname, '..', '..', '..', 'storage', 'v1', 'docs', 'products')
+    )
+  ).single('productsFile'),
+  ProductsBulkUploadService.productsBulkUpload
+);
 router.put('/update-position/:id', ProductsService.updateProductPosition); // apply data structure
 
 // /**
