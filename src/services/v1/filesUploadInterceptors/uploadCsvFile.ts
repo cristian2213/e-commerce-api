@@ -9,7 +9,7 @@ const fileStorage = (path: string) => {
       try {
         const pathExists = existsSync(path);
         if (!pathExists) {
-          mkdirSync(path);
+          mkdirSync(path, { recursive: true });
         }
         cb(null, path);
       } catch (error: any) {
