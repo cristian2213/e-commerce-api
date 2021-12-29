@@ -49,6 +49,7 @@ const multerOptions = (path: string): Options => {
   const options: Options = {
     limits: {
       files: 1,
+      fieldSize: 100000000,
     },
     storage: fileStorage(path),
     fileFilter: fileFilter,

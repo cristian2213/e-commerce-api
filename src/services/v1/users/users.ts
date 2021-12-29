@@ -9,7 +9,6 @@ import { errorsHandler } from '../../../helpers/v1/handlers/errorsHandler';
 import RolesService from '../roles/roles';
 import Role from '../../../models/v1/user/roles';
 import { ResponseUser } from '../../../types/v1/users/users.type';
-import AuthService from '../../../services/v1/auth/auth';
 import { generateRandomToken } from '../../../helpers/v1/tokens/generateRandomToken';
 
 const createUser = async (req: Request, res: Response) => {

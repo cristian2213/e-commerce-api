@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import dbConnection from '../../../config/v1/db/databae.config';
+import { generateSlug } from '../../../helpers/v1/products/generateSlug';
 
 const Product = dbConnection.define(
   'Product',
@@ -104,6 +105,13 @@ const Product = dbConnection.define(
   },
 
   {
+    hooks: {
+      beforeBulkCreate: (products: any) => {
+        for (let i = 0; i < products.length; i++) {
+          products[i].slug = generateSlug(products[i].name);
+        }
+      },
+    },
     timestamps: true,
     deletedAt: true,
     paranoid: true,

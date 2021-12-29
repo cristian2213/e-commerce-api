@@ -5,13 +5,15 @@ import {
   createProductReq,
   updateProductReq,
   getProductReq,
+  getProductsReq,
+  bulkUploadReq,
 } from '../../../requests/v1/products/products';
 import ProductsService from '../../../services/v1/products/products';
 import ProductsBulkUploadService from '../../../services/v1/products/productsBulkUpload';
 import CSVUploadService from '../../../services/v1/filesUploadInterceptors/uploadCsvFile';
 const router = Router();
 
-router.get('/get-products', ProductsService.getProducts);
+router.get('/get-products', getProductsReq, ProductsService.getProducts);
 router.get('/get-product/:slug', getProductReq, ProductsService.getProduct);
 router.post('/create-product', createProductReq, ProductsService.createProduct);
 router.put(
@@ -27,12 +29,18 @@ router.delete(
 );
 
 router.post(
-  '/bulk-upload',
+  '/bulk-upload-validation',
   multer(
     CSVUploadService.multerOptions(
       join(__dirname, '..', '..', '..', 'storage', 'v1', 'docs', 'products')
     )
   ).single('productsFile'),
+  ProductsBulkUploadService.productsBulkUploadValidation
+);
+
+router.post(
+  '/bulk-upload',
+  bulkUploadReq,
   ProductsBulkUploadService.productsBulkUpload
 );
 router.put('/update-position/:id', ProductsService.updateProductPosition); // apply data structure

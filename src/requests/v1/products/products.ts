@@ -199,3 +199,100 @@ export const getProductReq = [
     validationHandler(req, res, next);
   },
 ];
+
+export const getProductsReq = [
+  body('userId')
+    .exists()
+    .withMessage('The userId field is required')
+    .bail()
+    .isInt()
+    .withMessage('The userId field must be a number')
+    .bail()
+    .custom((userId) => {
+      return UsersService.checkUser(userId);
+    }),
+
+  (req: Request, res: Response, next: NextFunction) => {
+    validationHandler(req, res, next);
+  },
+];
+
+export const bulkUploadReq = [
+  body('productData')
+    .exists()
+    .withMessage('The productData field is required')
+    .bail()
+    .isObject()
+    .withMessage('The productData field must be an object')
+    .bail(),
+
+  body('productData.name')
+    .exists()
+    .withMessage('The name field is required')
+    .bail()
+    .isString()
+    .withMessage('The name field must be a string')
+    .bail()
+    .trim()
+    .escape()
+    .toLowerCase(),
+
+  body('productData.title')
+    .exists()
+    .withMessage('The title field is required')
+    .bail()
+    .isString()
+    .withMessage('The title field must be a string')
+    .bail()
+    .trim()
+    .escape()
+    .toLowerCase(),
+
+  body('productData.description')
+    .exists()
+    .withMessage('The description field is required')
+    .bail()
+    .isString()
+    .withMessage('The description field must be a string')
+    .bail()
+    .trim()
+    .escape()
+    .toLowerCase(),
+
+  body('productData.price')
+    .exists()
+    .withMessage('The price field is required')
+    .bail()
+    .isString()
+    .withMessage('The price field must be a string')
+    .bail()
+    .trim()
+    .escape()
+    .toLowerCase(),
+
+  body('productData.stock')
+    .exists()
+    .withMessage('The stock field is required')
+    .bail()
+    .isString()
+    .withMessage('The stock field must be a string')
+    .bail()
+    .trim()
+    .escape()
+    .toLowerCase(),
+
+  body('userId')
+    .exists()
+    .withMessage('The userId field is required')
+    .bail()
+    .isInt()
+    .withMessage('The userId field must be a number')
+    .bail()
+    .custom((userId) => {
+      return UsersService.checkUser(userId);
+    }),
+
+  (req: Request, res: Response, next: NextFunction) => {
+    validationHandler(req, res, next);
+  },
+];
