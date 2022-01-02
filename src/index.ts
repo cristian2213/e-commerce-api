@@ -26,7 +26,7 @@ const bootstrap = async (): Promise<void> => {
   try {
     const env = config() as Environment;
     await validationSchema(env);
-
+    dbConnection.validate();
     // await dbConnection.sync({ force: true, alter: true });
 
     app.use(express.json());
