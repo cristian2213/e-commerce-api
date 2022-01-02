@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
+import { existsSync } from 'fs';
 import { StatusCodes } from 'http-status-codes';
 import { errorsHandler } from '../../../helpers/v1/handlers/errorsHandler';
 import UploadTypes from '../../../helpers/v1/products/productsUploadTypes';
 import CSVBulkUpload from './CSVBulkUpload';
+import XLSXBulkUpload from './XLSXBulkUpload';
 
 // STEP 01
 const productsBulkUploadValidation = async (req: Request, res: Response) => {
@@ -17,10 +19,10 @@ const productsBulkUploadValidation = async (req: Request, res: Response) => {
     switch (true) {
       case uploadingType === UploadTypes.CSVFILE:
         CSVBulkUpload.validateCSVFile(req, res);
-
         break;
 
       case uploadingType === UploadTypes.XLSXFILE:
+        XLSXBulkUpload.validateXLSXFile(req, res)
         break;
 
       case uploadingType === UploadTypes.TXTFILE:
@@ -51,9 +53,18 @@ const productsBulkUpload = (req: Request, res: Response) => {
   }
 };
 
+const checkFile = (req: Request, res: Response) => {
+  const { filePath } = req.body;
+  const file = existsSync(filePath);
+  if (!file) throw new Error("File doesn't exist");
+  return true;
+};
+
+
 export default {
   productsBulkUploadValidation,
   productsBulkUpload,
+  checkFile
 };
 
 // const validateCSVFile = (req: Request, res: Response) => {

@@ -19,6 +19,7 @@ dist/
 *.pdf
 *.txt
 *.csv
+*.xlsx
 
 # Docker
 mysql_data/

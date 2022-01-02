@@ -40,7 +40,7 @@ const fileFilter = (
   //   encoding: '7bit',
   //   mimetype: 'application/pdf'
   // }
-  if (!file.originalname.match(/\.(csv)$/)) return cb(null, false);
+  if (!file.originalname.match(/\.(csv|xlsx)$/)) return cb(null, false);
 
   cb(null, true);
 };

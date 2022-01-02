@@ -10,7 +10,8 @@ import {
 } from '../../../requests/v1/products/products';
 import ProductsService from '../../../services/v1/products/products';
 import ProductsBulkUploadService from '../../../services/v1/products/productsBulkUpload';
-import CSVUploadService from '../../../services/v1/filesUploadInterceptors/uploadCsvFile';
+import FileInterceptor from '../../../services/v1/filesUploadInterceptors/uploadCsvXlsxFile';
+
 const router = Router();
 
 router.get('/get-products', getProductsReq, ProductsService.getProducts);
@@ -31,7 +32,7 @@ router.delete(
 router.post(
   '/bulk-upload-validation',
   multer(
-    CSVUploadService.multerOptions(
+    FileInterceptor.multerOptions(
       join(__dirname, '..', '..', '..', 'storage', 'v1', 'docs', 'products')
     )
   ).single('productsFile'),

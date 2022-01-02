@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import csv from 'csv-parser';
 import validator from 'validator';
-import { createReadStream } from 'fs';
-import { StatusCodes } from 'http-status-codes';
+import { createReadStream, existsSync } from 'fs';
+import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import db from '../../../config/v1/db/databae.config';
 import { ProductsBulkUpload } from '../../../types/v1/products/CSVFileBulkUpload';
 import Product from '../../../models/v1/user/product';
 import productsValidationSchema from '../../../helpers/v1/products/productsValidationSchema';
+import ProductsBulkUploadService from './productsBulkUpload';
 
 // STEP 01
 const validateCSVFile = (req: Request, res: Response) => {
@@ -63,9 +64,20 @@ const validateCSVFile = (req: Request, res: Response) => {
 // STEP 03
 const readCSVFile = (req: Request, res: Response) => {
   const { filePath } = req.body;
+
+  try {
+    ProductsBulkUploadService.checkFile(req, res);
+  } catch (error: any) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      statusCode: ReasonPhrases.NOT_FOUND,
+      onmessage: error.message,
+    });
+  }
+
   const reader = createReadStream(filePath, {
     encoding: 'utf-8',
   });
+
   const data = [] as ProductsBulkUpload[];
 
   reader
