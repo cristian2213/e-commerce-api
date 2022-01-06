@@ -1,17 +1,28 @@
 import { Request, Response } from 'express';
 import csv from 'csv-parser';
 import validator from 'validator';
-import { createReadStream, existsSync } from 'fs';
+import { createReadStream } from 'fs';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import db from '../../../config/v1/db/databae.config';
-import { ProductsBulkUpload } from '../../../types/v1/products/CSVFileBulkUpload';
+import { CSVFileProductsBulkUpload } from '../../../types/v1/products/CSVFileBulkUpload';
 import Product from '../../../models/v1/user/product';
 import productsValidationSchema from '../../../helpers/v1/products/productsValidationSchema';
 import ProductsBulkUploadService from './productsBulkUpload';
+import fieldsForCreatingProduct from '../../../helpers/v1/products/fieldsForCreatingProduct';
 
 // STEP 01
 const validateCSVFile = (req: Request, res: Response) => {
   const file = req.file as Express.Multer.File;
+  req.body.filePath = file.path;
+  try {
+    ProductsBulkUploadService.checkFile(req, res);
+  } catch (error: any) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      statusCode: ReasonPhrases.NOT_FOUND,
+      onmessage: error.message,
+    });
+  }
+
   const reader = createReadStream(file.path, {
     encoding: 'utf-8',
   });
@@ -23,29 +34,15 @@ const validateCSVFile = (req: Request, res: Response) => {
       })
     )
     .on('headers', (headers: string[]) => {
-      const requiredFields = [
-        {
-          inputType: 'text',
-          label: 'Name',
-        },
-        {
-          inputType: 'text',
-          label: 'Title',
-        },
-        {
-          inputType: false,
-          element: 'editor',
-          label: 'Description',
-        },
-        {
-          inputType: 'number',
-          label: 'Name',
-        },
-        {
-          inputType: 'number',
-          label: 'Stock',
-        },
-      ];
+      if (headers.length === 0)
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          statusCode: ReasonPhrases.BAD_REQUEST,
+          message: "File doesn't have content",
+          filePath: file.path,
+        });
+
+      const requiredFields = fieldsForCreatingProduct();
+
       return res.status(StatusCodes.OK).json({
         requiredFields,
         headerOptions: headers,
@@ -61,7 +58,7 @@ const validateCSVFile = (req: Request, res: Response) => {
     });
 };
 
-// STEP 03
+// STEP 02
 const readCSVFile = (req: Request, res: Response) => {
   const { filePath } = req.body;
 
@@ -70,7 +67,7 @@ const readCSVFile = (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(StatusCodes.NOT_FOUND).json({
       statusCode: ReasonPhrases.NOT_FOUND,
-      onmessage: error.message,
+      message: error.message,
     });
   }
 
@@ -78,7 +75,7 @@ const readCSVFile = (req: Request, res: Response) => {
     encoding: 'utf-8',
   });
 
-  const data = [] as ProductsBulkUpload[];
+  const data = [] as CSVFileProductsBulkUpload[];
 
   reader
     .pipe(
@@ -112,10 +109,8 @@ const readCSVFile = (req: Request, res: Response) => {
     });
 };
 
-// STEP 04
+// STEP 03
 const CSVFileProductsValidate = async (req: Request, res: Response) => {
-  const successfulUploads = [];
-  const failedUploads = [];
   const { products, productData: matchColumns, userId } = req.body;
 
   let position: number = 1;
@@ -127,7 +122,10 @@ const CSVFileProductsValidate = async (req: Request, res: Response) => {
 
   if (lastPosition) position += lastPosition;
 
-  for (let i = 0; i < products.length; i++) {
+  const successfulUploads = [];
+  const failedUploads = [];
+  const totalProducts = products.length;
+  for (let i = 0; i < totalProducts; i++) {
     try {
       const alignKeys = {
         name: products[i][matchColumns.name],
@@ -137,11 +135,14 @@ const CSVFileProductsValidate = async (req: Request, res: Response) => {
         stock: products[i][matchColumns.stock],
       };
 
+      // Function for immutability
       const validationSchema = productsValidationSchema();
 
       const product = await validationSchema.validateAsync(alignKeys);
+
       product['position'] = position;
       product['userId'] = userId;
+
       successfulUploads.push(product);
       position++;
     } catch (error: any) {
@@ -161,11 +162,11 @@ const CSVFileProductsValidate = async (req: Request, res: Response) => {
   }
 
   req.body.validation = { failedUploads, successfulUploads };
-  await CSVFileProductsUpload(req, res);
+  ProductsUpload(req, res);
 };
 
-// STEP 05
-const CSVFileProductsUpload = async (req: Request, res: Response) => {
+// STEP 04
+const ProductsUpload = async (req: Request, res: Response) => {
   const { failedUploads, successfulUploads } = req.body.validation;
 
   const message =
@@ -219,4 +220,5 @@ const CSVFileProductsUpload = async (req: Request, res: Response) => {
 export default {
   validateCSVFile,
   readCSVFile,
+  ProductsUpload,
 };

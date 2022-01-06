@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { body, param } from 'express-validator';
 import validationHandler from '../../../helpers/v1/handlers/validationHandler';
-import User from '../../../models/v1/user/user';
 import UsersService from '../../../services/v1/users/users';
 
 export const createProductReq = [
@@ -234,8 +233,7 @@ export const bulkUploadReq = [
     .withMessage('The name field must be a string')
     .bail()
     .trim()
-    .escape()
-    .toLowerCase(),
+    .escape(),
 
   body('productData.title')
     .exists()
@@ -245,8 +243,7 @@ export const bulkUploadReq = [
     .withMessage('The title field must be a string')
     .bail()
     .trim()
-    .escape()
-    .toLowerCase(),
+    .escape(),
 
   body('productData.description')
     .exists()
@@ -256,8 +253,7 @@ export const bulkUploadReq = [
     .withMessage('The description field must be a string')
     .bail()
     .trim()
-    .escape()
-    .toLowerCase(),
+    .escape(),
 
   body('productData.price')
     .exists()
@@ -267,8 +263,7 @@ export const bulkUploadReq = [
     .withMessage('The price field must be a string')
     .bail()
     .trim()
-    .escape()
-    .toLowerCase(),
+    .escape(),
 
   body('productData.stock')
     .exists()
@@ -278,8 +273,7 @@ export const bulkUploadReq = [
     .withMessage('The stock field must be a string')
     .bail()
     .trim()
-    .escape()
-    .toLowerCase(),
+    .escape(),
 
   body('userId')
     .exists()

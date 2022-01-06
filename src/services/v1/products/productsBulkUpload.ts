@@ -22,7 +22,7 @@ const productsBulkUploadValidation = async (req: Request, res: Response) => {
         break;
 
       case uploadingType === UploadTypes.XLSXFILE:
-        XLSXBulkUpload.validateXLSXFile(req, res)
+        XLSXBulkUpload.validateXLSXFile(req, res);
         break;
 
       case uploadingType === UploadTypes.TXTFILE:
@@ -43,6 +43,7 @@ const productsBulkUpload = (req: Request, res: Response) => {
         break;
 
       case uploadingType === UploadTypes.XLSXFILE:
+        XLSXBulkUpload.readXLSXFile(req, res);
         break;
 
       case uploadingType === UploadTypes.TXTFILE:
@@ -60,28 +61,8 @@ const checkFile = (req: Request, res: Response) => {
   return true;
 };
 
-
 export default {
   productsBulkUploadValidation,
   productsBulkUpload,
-  checkFile
+  checkFile,
 };
-
-// const validateCSVFile = (req: Request, res: Response) => {
-//   const file = req.file as Express.Multer.File;
-//   const reader = createReadStream(file.path, {
-//     encoding: 'utf-8',
-//   });
-//   reader.on('data', (stream) => {
-//     console.log(stream);
-//   });
-//   reader.on('end', () => {
-//     return res.status(StatusCodes.OK).json({
-//       statusCode: StatusCodes.CREATED,
-//       info: {
-//         createdProducts: 0,
-//         faildedProducts: 0,
-//       },
-//     });
-//   });
-// };
