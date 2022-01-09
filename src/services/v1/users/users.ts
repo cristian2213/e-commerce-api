@@ -1,13 +1,13 @@
-import { UserInstance } from './../../../models/v1/user/user';
+import { UserInstance } from '../../../models/v1/users/user';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import argon2 from 'argon2';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 
-import User, { UserCreation } from '../../../models/v1/user/user';
+import User, { UserCreation } from '../../../models/v1/users/user';
 import { errorsHandler } from '../../../helpers/v1/handlers/errorsHandler';
 import RolesService from '../roles/roles';
-import Role from '../../../models/v1/user/roles';
+import Role from '../../../models/v1/users/roles';
 import { ResponseUser } from '../../../types/v1/users/users.type';
 import { generateRandomToken } from '../../../helpers/v1/tokens/generateRandomToken';
 

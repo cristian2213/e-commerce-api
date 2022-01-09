@@ -1,7 +1,7 @@
 import { errorsHandler } from './../../../helpers/v1/handlers/errorsHandler';
 import { Request, Response } from 'express';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
-import Product from '../../../models/v1/user/product';
+import Product from '../../../models/v1/products/product';
 import { Op, fn, col } from 'sequelize';
 import { generateSlug } from '../../../helpers/v1/products/generateSlug';
 

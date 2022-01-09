@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import envConfig from '../../../config/v1/env/env.config';
 import config from '../../../config';
-import User from '../../../models/v1/user/user';
+import User from '../../../models/v1/users/user';
 envConfig();
 
 const verifyToken = async (req: any, res: Response, next: NextFunction) => {

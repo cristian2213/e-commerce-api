@@ -7,7 +7,7 @@ import productsBulkUpload from './productsBulkUpload';
 import ProductsBulkUploadService from './productsBulkUpload';
 import { XLSXFileProductsBulkUpload } from '../../../types/v1/products/CSVFileBulkUpload';
 import validator from 'validator';
-import Product from '../../../models/v1/user/product';
+import Product from '../../../models/v1/products/product';
 import productsValidationSchema from '../../../helpers/v1/products/productsValidationSchema';
 import CSVBulkUpload from './CSVBulkUpload';
 
@@ -101,7 +101,6 @@ const readXLSXFile = (req: Request, res: Response) => {
 
     // Get needed data for creating a product according to the coordinate
     for (let row = 2; row <= totalRecords; row++) {
-      console.log(row);
       products.push({
         name: workSheet[column.name + row]
           ? validator
@@ -137,7 +136,7 @@ const readXLSXFile = (req: Request, res: Response) => {
           : 0,
       });
     }
-    console.log(products);
+
     req.body.products = products;
     XLSXFileProductsValidate(req, res);
   } catch (error: any) {

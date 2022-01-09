@@ -5,10 +5,11 @@ import { createReadStream } from 'fs';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import db from '../../../config/v1/db/databae.config';
 import { CSVFileProductsBulkUpload } from '../../../types/v1/products/CSVFileBulkUpload';
-import Product from '../../../models/v1/user/product';
+import Product from '../../../models/v1/products/product';
 import productsValidationSchema from '../../../helpers/v1/products/productsValidationSchema';
 import ProductsBulkUploadService from './productsBulkUpload';
 import fieldsForCreatingProduct from '../../../helpers/v1/products/fieldsForCreatingProduct';
+import ProductsLogService from '../logs/productsLogs/bulkUploadLog';
 
 // STEP 01
 const validateCSVFile = (req: Request, res: Response) => {
@@ -34,12 +35,15 @@ const validateCSVFile = (req: Request, res: Response) => {
       })
     )
     .on('headers', (headers: string[]) => {
-      if (headers.length === 0)
+      if (headers.length === 0 || headers[0] === '') {
+        // Delete file uploaded
+
         return res.status(StatusCodes.BAD_REQUEST).json({
           statusCode: ReasonPhrases.BAD_REQUEST,
           message: "File doesn't have content",
           filePath: file.path,
         });
+      }
 
       const requiredFields = fieldsForCreatingProduct();
 
@@ -178,15 +182,11 @@ const ProductsUpload = async (req: Request, res: Response) => {
   };
 
   if (successfulUploads.length === 0) {
-    // Create errors log
-    const log = { id: 1 };
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ ...resMsg, logId: log.id });
+    return res.status(StatusCodes.BAD_REQUEST).json({ ...resMsg });
   }
 
-  let isSuccessful = true;
   let transaction: any;
+  let successfulTransation = true;
   try {
     transaction = await db.transaction();
     await Product.bulkCreate(successfulUploads, {
@@ -194,27 +194,32 @@ const ProductsUpload = async (req: Request, res: Response) => {
     });
     await transaction.commit();
   } catch (error) {
-    isSuccessful = false;
     await transaction.rollback();
-  }
+    successfulTransation = false;
+  } finally {
+    const log = await ProductsLogService.createLog(req, res);
+    const logId = log instanceof Error ? null : log.id;
 
-  // CREATE ERROR LOG
+    if (!successfulTransation)
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        successfulUploads: 0,
+        failedUploads: resMsg.successfulUploads + resMsg.failedUploads,
+        message: resMsg.message,
+        log: {
+          logId,
+          message: 'The log was not created!',
+        },
+      });
 
-  const log = { id: 1 };
-  if (!isSuccessful) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      successfulUploads: 0,
-      failedUploads: resMsg.successfulUploads + resMsg.failedUploads,
-      message: resMsg.message,
-      logId: log.id,
+    return res.status(StatusCodes.OK).json({
+      ...resMsg,
+      message: 'Ok',
+      log: {
+        logId,
+        message: 'Created!',
+      },
     });
   }
-
-  return res.status(StatusCodes.OK).json({
-    ...resMsg,
-    message: 'Ok',
-    logId: log.id,
-  });
 };
 
 export default {

@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
 import { errorsHandler } from '../../../helpers/v1/handlers/errorsHandler';
-import Role from '../../../models/v1/user/roles';
+import Role from '../../../models/v1/users/roles';
 
 // const createRole = async (req: Request, res: Response, next: NextFunction) => {
 //   try {

@@ -2,7 +2,8 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import dbConnection from '../../../config/v1/db/databae.config';
 import argon2 from 'argon2';
 import Role from './roles';
-import Product from './product';
+import Product from '../products/product';
+import Log from '../logs/log';
 
 // UserAttributes defines all the possible attributes of our model
 interface UserAttributes {
@@ -124,5 +125,8 @@ User.hasMany(Product, {
   as: 'products',
 });
 Product.belongsTo(User, { foreignKey: 'userId' });
+
+User.hasMany(Log, { sourceKey: 'id', foreignKey: 'userId', as: 'logs' });
+Log.belongsTo(User, { foreignKey: 'userId' });
 
 export default User;
