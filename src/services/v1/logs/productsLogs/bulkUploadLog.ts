@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join, parse, sep, normalize } from 'path';
+import { join, parse, sep } from 'path';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import { errorsHandler } from './../../../../helpers/v1/handlers/errorsHandler';
 import { Request, Response } from 'express';
@@ -25,7 +25,25 @@ const createLog = async (req: Request, res: Response): Promise<LogInstance> => {
   }
 };
 
-const logDownload = async (req: Request, res: Response): Promise<any> => {
+const findLog = async (req: Request): Promise<any> => {
+  const { userId } = req.body;
+  const id = req.body.logId ? req.body.logId : req.params.logId;
+  const log = await Log.findOne({
+    attributes: { exclude: ['errors', 'filePath', 'deletedAt'] },
+    where: {
+      id,
+      userId,
+    },
+  });
+  if (!log)
+    return {
+      statusCode: ReasonPhrases.NOT_FOUND,
+      message: `Log #${id} doesn't exist`,
+    };
+  return log;
+};
+
+const downloadLog = async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
   try {
     const log = await Log.findByPk(id);
@@ -79,4 +97,53 @@ const logDownload = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export default { createLog, logDownload };
+const getLogs = async (req: Request, res: Response) => {
+  const { userId } = req.body;
+
+  try {
+    const logs = await Log.findAll({
+      attributes: { exclude: ['errors', 'filePath', 'deletedAt'] },
+      where: {
+        id: userId,
+      },
+    });
+    return res.status(StatusCodes.OK).json({
+      logs,
+      totalLog: logs.length,
+    });
+  } catch (error: any) {
+    errorsHandler(req, res, error);
+  }
+};
+
+const getLog = async (req: Request, res: Response) => {
+  try {
+    const response = await findLog(req);
+    if (!response.id) return res.status(StatusCodes.NOT_FOUND).json(response);
+    return res.status(StatusCodes.OK).json(response);
+  } catch (error: any) {
+    errorsHandler(req, res, error);
+  }
+};
+
+const deleteLog = async (req: Request, res: Response) => {
+  try {
+    const response = await findLog(req);
+    if (!response.id) return res.status(StatusCodes.NOT_FOUND).json(response);
+    await response.destroy();
+    return res.status(StatusCodes.OK).json({
+      statusCode: ReasonPhrases.OK,
+      message: `Log #${response.id} was deleted!`,
+    });
+  } catch (error: any) {
+    errorsHandler(req, res, error);
+  }
+};
+
+export default {
+  createLog,
+  downloadLog,
+  getLogs,
+  getLog,
+  deleteLog,
+};
