@@ -3,17 +3,17 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <!-- <a href="https://github.com/othneildrew/Best-README-Template">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
+  </a> -->
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">CIFULLMA</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    An awesome e-commerce project
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
+    <!-- <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a> -->
+    <!-- <br /> -->
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
     ·
@@ -41,11 +41,11 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <!-- <li><a href="#roadmap">Roadmap</a></li> -->
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
+    <!-- <li><a href="#license">License</a></li> -->
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> -->
   </ol>
 </details>
 
@@ -53,10 +53,8 @@
 
 ## About The Project
 
-[![CIFULLMA E-commerce][product-screenshot]](https://example.com)
-
-This is an amazing e-commerce project, where all users can sell and buy products without problems, it allows each user to have a dashboard with everything necessary to load products in the right way through different types of load, for example, loads. In .csv, .xlsx and .txt format and also dynamic loads using plain text and using regular expressions to mutate it to a correct format, in addition, this project will implement development tools such as Docker-compose and Docker containers for deployment on the server and to finish this project, it will have a good documentation using Swagger.
-
+<a id="about-the-project"></a>
+This is an amazing e-commerce project, where all users can sell and buy products without problems, it allows each user to have a dashboard with everything necessary to load products in the right way through different types of load, for example, loads. In .csv, .xlsx and .txt format and also dynamic loads using plain text and using regular expressions to mutate it to a correct format, in addition, this project will implement development tools such as Docker-compose and <strong><a href="https://www.docker.com/">Docker</a></strong> containers for deployment on the server and to finish this project, I will implement notifications and a real time chat system using <strong><a href="https://socket.io/">Socket.IO</a></strong> and create my own library using <strong><a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a></strong> to build graphs of system statistics, last but not least this project will have unit tests and good documentation made with <strong><a href="https://swagger.io/">Swagger</a></strong>.
 Here's why:
 
 - I want to increase my skills in Node.js, since this is my first project using this framework.
@@ -67,12 +65,16 @@ Here's why:
 
 ### Built With
 
+<a id="built-with"></a>
 These are the technologies with which this project is being built, I had thought to develop it with Nest.js, but I will leave it for another project.
 
 - [Node.js](https://nodejs.org/)
 - [Express](https://expressjs.com/)
 - [Pug](https://pugjs.org/)
 - [React.js](https://reactjs.org/)
+- [Jest](https://jestjs.io/)
+- [SuperTest](https://github.com/visionmedia/supertest#readme)
+- [Socket.IO](https://socket.io/)
 - [Swagger](https://swagger.io/)
 - [Docker](https://docker.com/)
 - [Docker-compose](https://docs.docker.com/compose/)
@@ -83,34 +85,55 @@ These are the technologies with which this project is being built, I had thought
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+<a id="getting-started"></a>
+First, make sure you have the following dependencies with this version or a newer one.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+<a id="prerequisites"></a>
 
-- npm
+- node & npm
   ```sh
-  npm install npm@latest -g
+  v16.13.1 & v8.1.2
   ```
+- Docker & Docker-compose
+
+- A coffee on your table ☕
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+<a id="installation"></a>
+_To run this project, please follow the steps below._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/cristian2213/e-commerce-api.git
    ```
-3. Install NPM packages
+2. Run services
+   ```sh
+   docker-compose up -d
+   ```
+3. Create a .env file in the root and paste this variables:
+   ```js
+   APP_PORT=3000
+   APP_HOST=127.0.0.1
+   DB_CONNECTION=mysql
+   MYSQL_HOST=127.0.0.1
+   MYSQL_DATABASE=e-commerce-app-01
+   MYSQL_PORT=3306
+   MYSQL_USER=root
+   MYSQL_ROOT_PASSWORD=123456
+   JWT_SECRET=yourKey
+   SENDGRID_API_KEY=youCanCreateAKeyInSendGridIsFree
+   SENDGRID_EMAIL_FROM=emailToSendEmailVerification
+   ```
+4. Install NPM packages
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+5. Run the server in development mode
+   ```sh
+   npm run dev
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -119,6 +142,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 ## Usage
 
+<a id="usage"></a>
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
@@ -127,7 +151,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <!-- ROADMAP -->
 
-## Roadmap
+<!-- ## Roadmap
+
+<a id="roadmap"></a>
 
 - [x] Add Changelog
 - [x] Add back to top links
@@ -139,12 +165,13 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<p align="right">(<a href="#top">back to top</a>)</p> -->
 
 <!-- CONTRIBUTING -->
 
 ## Contributing
 
+<a id="contributing"></a>
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
@@ -162,6 +189,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
+<a id="license"></a>
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -170,6 +198,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
+<a id="contact"></a>
 My Linkedin: [https://www.linkedin.com/in/cristian-johany/](https://www.linkedin.com/in/cristian-johany/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
